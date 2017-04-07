@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="//code.jquery.com/jquery.min.js"></script>
+        <script>
+
+          function request_start(target){
+            $.ajax({
+              url:"/myapp/start",
+              data:target,
+              success:function(data){alert(data);}
+            });
+          }
+        </script>
+        <meta charset="utf-8">
+        <title>Minimal Django File Upload Example</title>
+    </head>
+
+    <body>
+        <!-- List of uploaded documents -->
+        <ul>
+            {% for document in documents %}
+                <li>{{document.project_name}} :: <a href="{{ document.docfile.url }}">{{ document.docfile.name }}
+                </a>:: status {{document.status}}
+                <Button onclick="request_start('{{document.project_name}}')">Start</Button>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <!-- Upload form. Note enctype attribute! -->
+        <form action="{% url "list" %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.non_field_errors }}</p>
+
+            <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+
+            <p>
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+            </p>
+            <p>{{form.project_name.label_tag}}</p>
+            <p>{{form.project_name}}</p>
+
+            <p><input type="submit" value="Upload"/></p>
+        </form>
+    </body>
+
+</html>
